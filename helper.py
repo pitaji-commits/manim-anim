@@ -40,3 +40,12 @@ class MyNode(VGroup):
             self.add(node, node_text, node_label)
         else:
             self.add(node, node_text)
+
+    def get_cell(self):
+        return self[0]
+
+    def get_value(self):
+        return self[1]
+
+    def get_label(self):
+        return self[2]
