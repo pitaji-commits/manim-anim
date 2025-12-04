@@ -49,3 +49,25 @@ class MyNode(VGroup):
 
     def get_label(self):
         return self[2]
+
+    def set_value(self, new_value=" "):
+        if new_value == self.value:
+            return
+
+        new_text = Text(str(new_value), font_size=self.font_size, z_index=1).move_to(
+            self[0].get_center()
+        )
+        self.value = new_value
+        self[1].become(new_text)
+
+    def set_label(self, new_label=" ", label_pos=None):
+        if self.is_label:
+            label_pos = label_pos if label_pos is not None else self.label_pos
+            new_label = Text(
+                str(new_label), font_size=self.label_font_size, z_index=1
+            ).next_to(self[0], label_pos)
+            self.label_pos = label_pos
+            self.label = new_label
+            self[2].become(new_label)
+
+
