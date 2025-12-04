@@ -149,3 +149,29 @@ class MyVector(VGroup):
             .set_stroke(color=color, width=2)
         )
 
+    def extend(self, scene, values=None, at=None):
+        if values is None:
+            return
+
+        cells = self.__create_cells(values)
+        at = len(self.data) if at is None else min(at, len(self.data))
+
+        if at == 0:
+            cells.next_to(self[0], LEFT, aligned_edge=RIGHT).shift(LEFT * 0.05)
+        elif at == len(self.data):
+            cells.next_to(self[-1], aligned_edge=LEFT).shift(RIGHT * 0.05)
+        else:
+            scene.play(
+                self[at:]
+                .animate.shift(RIGHT * self[0].width * len(values))
+                .shift(LEFT * 0.05)
+            )
+            cells.next_to(self[at - 1], aligned_edge=LEFT)
+
+        for idx, val in enumerate(values):
+            self.data.insert(at + idx, val)
+            self.insert(at + idx, cells[idx])
+
+        scene.play(Write(cells))
+        self.__update_indices()
+
