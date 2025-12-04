@@ -14,9 +14,22 @@ def move_code(scene, code_string="", language="python"):
 
 class Test(Scene):
     def construct(self):
-        data = [1, 2, 3, 4, 5, 6, 7, 8]
-        nodes = VGroup(*[MyNode(value=val, is_rect=False) for val in data]).arrange(
-            RIGHT
-        )
+        levels = [
+            [0],
+            [1, 2],
+            [3, 4, 5, 6],
+            [7, 8, 9, 10, 11, 12, 13, 14],
+            [15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30],
+        ]
+
+        nodes = VGroup()
+        for level in levels:
+            node_level = VGroup()
+            node_level.add(
+                *[MyNode(value=d, is_rect=False, radius=0.25) for d in level]
+            ).arrange(RIGHT)
+            nodes.add(node_level)
+        nodes.arrange(DOWN, buff=0.5)
+
         self.play(Write(nodes))
         self.wait(1)
