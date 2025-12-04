@@ -22,14 +22,34 @@ class Test(Scene):
             [15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30],
         ]
 
+        rad = 0.25
+        buff=0.5
+
         nodes = VGroup()
         for level in levels:
             node_level = VGroup()
             node_level.add(
-                *[MyNode(value=d, is_rect=False, radius=0.25) for d in level]
+                *[MyNode(value=d, is_rect=False, radius=rad) for d in level]
             ).arrange(RIGHT)
             nodes.add(node_level)
-        nodes.arrange(DOWN, buff=0.5)
+        nodes.arrange(DOWN, buff=buff)
 
+        nodes[3][0].next_to(nodes[4][0], UP*1.5).shift(RIGHT*buff).shift(LEFT * rad/2)
+        nodes[3][1].next_to(nodes[4][2], UP*1.5).shift(RIGHT*buff).shift(LEFT * rad/2)
+        nodes[3][2].next_to(nodes[4][4], UP*1.5).shift(RIGHT*buff).shift(LEFT * rad/2)
+        nodes[3][3].next_to(nodes[4][6], UP*1.5).shift(RIGHT*buff).shift(LEFT * rad/2)
+        nodes[3][4].next_to(nodes[4][8], UP*1.5).shift(RIGHT*buff).shift(LEFT * rad/2)
+        nodes[3][5].next_to(nodes[4][10], UP*1.5).shift(RIGHT*buff).shift(LEFT * rad/2)
+        nodes[3][6].next_to(nodes[4][12], UP*1.5).shift(RIGHT*buff).shift(LEFT * rad/2)
+        nodes[3][7].next_to(nodes[4][14], UP*1.5).shift(RIGHT*buff).shift(LEFT * rad/2)
+
+        nodes[2][0].next_to(nodes[4][1], UP).shift(RIGHT*buff).shift(LEFT * rad/2).shift(UP)
+        nodes[2][1].next_to(nodes[4][5], UP).shift(RIGHT*buff).shift(LEFT * rad/2).shift(UP)
+        nodes[2][2].next_to(nodes[4][9], UP).shift(RIGHT*buff).shift(LEFT * rad/2).shift(UP)
+        nodes[2][3].next_to(nodes[4][13], UP).shift(RIGHT*buff).shift(LEFT * rad/2).shift(UP)
+
+        nodes[1][0].next_to(nodes[4][3], UP).shift(RIGHT*buff).shift(LEFT * rad/2).shift(2*UP)
+        nodes[1][1].next_to(nodes[4][11], UP).shift(RIGHT*buff).shift(LEFT * rad/2).shift(2*UP)
+        
         self.play(Write(nodes))
         self.wait(1)
