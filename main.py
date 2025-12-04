@@ -1,7 +1,6 @@
 from manim import *
 from helper import MyVector
 from helper import MyNode
-from numpy import array
 
 
 def move_code(scene, code_string="", language="python"):
@@ -14,12 +13,44 @@ def move_code(scene, code_string="", language="python"):
 
 
 POSITIONS = [
-    [([0., 2., 0.])],
-    [([-3.  ,  0.75,0.]), ([3.  , 0.75, 0.  ])],
-    [([-4.5 , -0.25,  0.  ]), ([-1.5 , -0.25, 0.  ]), ([ 1.5 , -0.25,  0.  ]), ([ 4.5 , -0.25,  0.  ])],
-    [([-5.25 , -1.125,  0.   ]), ([-3.75 , -1.125,  0.   ]), ([-2.25 , -1.125,  0.   ]), ([-0.75 , -1.125,  0.   ]), ([ 0.75 , -1.125,0.   ]), ([ 2.25 , -1.125,  0.   ]), ([ 3.75 , -1.125,  0.   ]), ([ 5.25 , -1.125,  0.   ])],
-    [([-5.625, -2.   ,  0.   ]), ([-4.875, -2.   ,  0.   ]), ([-4.125, -2.   ,  0.   ]), ([-3.375, -2.   ,  0.   ]), ([-2.625, -2.   ,  0.   ]), ([-1.875, -2.   ,  0.   ]), ([-1.125, -2.   ,  0.   ]), ([-0.375, -2.   ,  0.   ]), ([ 0.375, -2.   ,  0.   ]), ([ 1.125, -2.   ,  0.   ]), ([ 1.875, -2.   ,  0.   ]), ([ 2.625, -2.   ,  0.   ]), ([ 3.375, -2.   ,  0.   ]), ([ 4.125, -2.   ,  0.   ]), ([ 4.875, -2.   ,  0.   ]), ([ 5.625, -2.   ,  0.   ])]
+    [[0.0, 2.0, 0.0]],
+    [([-3.0, 0.75, 0.0]), ([3.0, 0.75, 0.0])],
+    [
+        ([-4.5, -0.25, 0.0]),
+        ([-1.5, -0.25, 0.0]),
+        ([1.5, -0.25, 0.0]),
+        ([4.5, -0.25, 0.0]),
+    ],
+    [
+        ([-5.25, -1.125, 0.0]),
+        ([-3.75, -1.125, 0.0]),
+        ([-2.25, -1.125, 0.0]),
+        ([-0.75, -1.125, 0.0]),
+        ([0.75, -1.125, 0.0]),
+        ([2.25, -1.125, 0.0]),
+        ([3.75, -1.125, 0.0]),
+        ([5.25, -1.125, 0.0]),
+    ],
+    [
+        ([-5.625, -2.0, 0.0]),
+        ([-4.875, -2.0, 0.0]),
+        ([-4.125, -2.0, 0.0]),
+        ([-3.375, -2.0, 0.0]),
+        ([-2.625, -2.0, 0.0]),
+        ([-1.875, -2.0, 0.0]),
+        ([-1.125, -2.0, 0.0]),
+        ([-0.375, -2.0, 0.0]),
+        ([0.375, -2.0, 0.0]),
+        ([1.125, -2.0, 0.0]),
+        ([1.875, -2.0, 0.0]),
+        ([2.625, -2.0, 0.0]),
+        ([3.375, -2.0, 0.0]),
+        ([4.125, -2.0, 0.0]),
+        ([4.875, -2.0, 0.0]),
+        ([5.625, -2.0, 0.0]),
+    ],
 ]
+
 
 class Test(Scene):
     def construct(self):
@@ -32,40 +63,17 @@ class Test(Scene):
         ]
 
         rad = 0.25
-        buff=0.5
 
         nodes = VGroup()
-        for level in levels:
+        for lid, level in enumerate(levels):
             node_level = VGroup()
-            node_level.add(
-                *[MyNode(value=d, is_rect=False, radius=rad) for d in level]
-            ).arrange(RIGHT)
+            for id, val in enumerate(level):
+                node = MyNode(value=val, is_rect=False, radius=rad).move_to(
+                    POSITIONS[lid][id]
+                )
+                node_level.add(node)
             nodes.add(node_level)
-        nodes.arrange(DOWN, buff=buff)
 
-        nodes[3][0].next_to(nodes[4][0], UP*1.5).shift(RIGHT*buff).shift(LEFT * rad/2)
-        nodes[3][1].next_to(nodes[4][2], UP*1.5).shift(RIGHT*buff).shift(LEFT * rad/2)
-        nodes[3][2].next_to(nodes[4][4], UP*1.5).shift(RIGHT*buff).shift(LEFT * rad/2)
-        nodes[3][3].next_to(nodes[4][6], UP*1.5).shift(RIGHT*buff).shift(LEFT * rad/2)
-        nodes[3][4].next_to(nodes[4][8], UP*1.5).shift(RIGHT*buff).shift(LEFT * rad/2)
-        nodes[3][5].next_to(nodes[4][10], UP*1.5).shift(RIGHT*buff).shift(LEFT * rad/2)
-        nodes[3][6].next_to(nodes[4][12], UP*1.5).shift(RIGHT*buff).shift(LEFT * rad/2)
-        nodes[3][7].next_to(nodes[4][14], UP*1.5).shift(RIGHT*buff).shift(LEFT * rad/2)
-
-        nodes[2][0].next_to(nodes[4][1], UP).shift(RIGHT*buff).shift(LEFT * rad/2).shift(UP)
-        nodes[2][1].next_to(nodes[4][5], UP).shift(RIGHT*buff).shift(LEFT * rad/2).shift(UP)
-        nodes[2][2].next_to(nodes[4][9], UP).shift(RIGHT*buff).shift(LEFT * rad/2).shift(UP)
-        nodes[2][3].next_to(nodes[4][13], UP).shift(RIGHT*buff).shift(LEFT * rad/2).shift(UP)
-
-        nodes[1][0].next_to(nodes[4][3], UP).shift(RIGHT*buff).shift(LEFT * rad/2).shift(2*UP)
-        nodes[1][1].next_to(nodes[4][11], UP).shift(RIGHT*buff).shift(LEFT * rad/2).shift(2*UP)
-
-        positions = []
-        for idx, node in enumerate(nodes):
-            level_pos = []
-            level_pos.extend([cell.get_cell().get_center() for cell in node])
-            positions.append(level_pos)
-        print(positions)
-        
         self.play(Write(nodes))
         self.wait(1)
+
