@@ -197,3 +197,30 @@ class MyVector(VGroup):
         self.data[fromx], self.data[toy] = self.data[toy], self.data[fromx]
         self[fromx].set_value(self.data[fromx])
         self[toy].set_value(self.data[toy])
+
+    def swap_and_shift(self, scene, fromx, toy):
+        if fromx == toy:
+            return
+
+        arc_angle = -PI
+        step = 1 if fromx < toy else -1
+        shift_dir = RIGHT if fromx > toy else LEFT
+
+        arc = ArcBetweenPoints(
+            self[fromx].get_cell().get_center(),
+            self[toy].get_cell().get_center(),
+            angle=arc_angle,
+        )
+        cell_values = VGroup(
+            cell.get_value() for cell in self[fromx + step : toy + step : step]
+        )
+
+        scene.play(
+            MoveAlongPath(self[fromx].get_value(), arc),
+            cell_values.animate.shift(shift_dir * self[0].width),
+        )
+
+        key = self.data[fromx]
+        self.data[fromx:] = self.data[fromx + 1 :]
+        self.data.insert(toy, key)
+        self.set_value()
