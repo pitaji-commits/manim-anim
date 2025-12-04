@@ -137,3 +137,15 @@ class MyVector(VGroup):
             self.data[idx] = val
             self[idx].set_value(val)
 
+    def set_focus(self, start=None, end=None, color=GREEN, buff=0.1):
+        start = 0 if start is None else start
+        end = len(self.data) if end is None else end
+
+        return (
+            SurroundingRectangle(
+                *[node.get_cell() for node in self[start:end]], buff=buff
+            )
+            .set_fill(color, opacity=0.3)
+            .set_stroke(color=color, width=2)
+        )
+
