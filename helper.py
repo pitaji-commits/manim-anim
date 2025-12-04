@@ -175,3 +175,25 @@ class MyVector(VGroup):
         scene.play(Write(cells))
         self.__update_indices()
 
+    def swap(self, scene, fromx, toy):
+        if fromx == toy:
+            return
+
+        arcup = ArcBetweenPoints(
+            self[fromx].get_cell().get_center(),
+            self[toy].get_cell().get_center(),
+            angle=-PI,
+        )
+        arcdwn = ArcBetweenPoints(
+            self[toy].get_cell().get_center(),
+            self[fromx].get_cell().get_center(),
+            angle=-PI,
+        )
+        scene.play(
+            MoveAlongPath(self[fromx].get_value(), arcup),
+            MoveAlongPath(self[toy].get_value(), arcdwn),
+        )
+
+        self.data[fromx], self.data[toy] = self.data[toy], self.data[fromx]
+        self[fromx].set_value(self.data[fromx])
+        self[toy].set_value(self.data[toy])
