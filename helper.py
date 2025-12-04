@@ -71,3 +71,55 @@ class MyNode(VGroup):
             self[2].become(new_label)
 
 
+
+class MyVector(VGroup):
+    def __init__(
+        self,
+        data=None,
+        dir_right=True,
+        index=True,
+        index_from=0,
+        index_step=1,
+        index_pos=UP,
+        buff=0,
+        **kwargs,
+    ):
+        super().__init__(**kwargs)
+
+        self.data = [] if data is None else data
+        self.dir_right = dir_right
+        self.dir_pos = RIGHT if dir_right else UP
+        self.index = index
+        self.index_from = index_from
+        self.index_step = index_step
+        self.index_pos = index_pos
+        self.buff = buff
+
+        cells = self.__create_cells(self.data)
+        for cell in cells:
+            self.add(cell)
+        self.__update_indices()
+
+    def __create_cells(self, data=None):
+        if data is None:
+            return VGroup()
+
+        cells = VGroup()
+        for id, val in enumerate(data):
+            cells.add(
+                MyNode(
+                    value=val, label=id, label_pos=self.index_pos, is_label=self.index
+                )
+            )
+        cells.arrange(self.dir_pos, buff=self.buff)
+        return cells
+
+    def __update_indices(self):
+        indices = range(
+            self.index_from,
+            self.index_from + (len(self.data) * self.index_step),
+            self.index_step,
+        )
+        for idx, index in enumerate(indices):
+            self[idx].set_label(index)
+
