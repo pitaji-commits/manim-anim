@@ -1,6 +1,7 @@
 from manim import *
 from helper import MyVector
 from helper import MyNode
+from numpy import array
 
 
 def move_code(scene, code_string="", language="python"):
@@ -11,6 +12,14 @@ def move_code(scene, code_string="", language="python"):
     scene.play(code.animate.scale(0.6).to_edge(UR))
     scene.wait(1)
 
+
+POSITIONS = [
+    [([0., 2., 0.])],
+    [([-3.  ,  0.75,0.]), ([3.  , 0.75, 0.  ])],
+    [([-4.5 , -0.25,  0.  ]), ([-1.5 , -0.25, 0.  ]), ([ 1.5 , -0.25,  0.  ]), ([ 4.5 , -0.25,  0.  ])],
+    [([-5.25 , -1.125,  0.   ]), ([-3.75 , -1.125,  0.   ]), ([-2.25 , -1.125,  0.   ]), ([-0.75 , -1.125,  0.   ]), ([ 0.75 , -1.125,0.   ]), ([ 2.25 , -1.125,  0.   ]), ([ 3.75 , -1.125,  0.   ]), ([ 5.25 , -1.125,  0.   ])],
+    [([-5.625, -2.   ,  0.   ]), ([-4.875, -2.   ,  0.   ]), ([-4.125, -2.   ,  0.   ]), ([-3.375, -2.   ,  0.   ]), ([-2.625, -2.   ,  0.   ]), ([-1.875, -2.   ,  0.   ]), ([-1.125, -2.   ,  0.   ]), ([-0.375, -2.   ,  0.   ]), ([ 0.375, -2.   ,  0.   ]), ([ 1.125, -2.   ,  0.   ]), ([ 1.875, -2.   ,  0.   ]), ([ 2.625, -2.   ,  0.   ]), ([ 3.375, -2.   ,  0.   ]), ([ 4.125, -2.   ,  0.   ]), ([ 4.875, -2.   ,  0.   ]), ([ 5.625, -2.   ,  0.   ])]
+]
 
 class Test(Scene):
     def construct(self):
@@ -50,6 +59,13 @@ class Test(Scene):
 
         nodes[1][0].next_to(nodes[4][3], UP).shift(RIGHT*buff).shift(LEFT * rad/2).shift(2*UP)
         nodes[1][1].next_to(nodes[4][11], UP).shift(RIGHT*buff).shift(LEFT * rad/2).shift(2*UP)
+
+        positions = []
+        for idx, node in enumerate(nodes):
+            level_pos = []
+            level_pos.extend([cell.get_cell().get_center() for cell in node])
+            positions.append(level_pos)
+        print(positions)
         
         self.play(Write(nodes))
         self.wait(1)
