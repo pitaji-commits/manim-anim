@@ -1,3 +1,4 @@
+from manim import *
 from helper import MyVector
 
 
