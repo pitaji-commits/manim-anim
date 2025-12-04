@@ -123,3 +123,17 @@ class MyVector(VGroup):
         for idx, index in enumerate(indices):
             self[idx].set_label(index)
 
+    def set_value(self, data=None, at=None):
+        data = self.data if data is None else data
+        at = range(len(self.data)) if at is None else at
+
+        if isinstance(data, (int, float, str)):
+            data = [data]
+
+        if isinstance(at, int):
+            at = [at]
+        
+        for idx, val in zip(at, data):
+            self.data[idx] = val
+            self[idx].set_value(val)
+
