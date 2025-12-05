@@ -62,9 +62,20 @@ class Test(Scene):
             [15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30],
         ]
 
+        status = [
+            [True] * 2**0,
+            [True] * 2**1,
+            [True] * 2**2,
+            [True] * 2**3,
+            [True] * 2**4
+        ]
+        status[4][0] = False
+
         rad = 0.25
 
         nodes = VGroup()
+        edges = VGroup()
+        
         for lid, level in enumerate(levels):
             node_level = VGroup()
             for id, val in enumerate(level):
@@ -74,6 +85,27 @@ class Test(Scene):
                 node_level.add(node)
             nodes.add(node_level)
 
-        self.play(Write(nodes))
+        for idx in range(1, len(levels)):
+            cur_level  = nodes[idx]
+            prev_level = nodes[idx-1]
+
+            for i, node in enumerate(cur_level):
+                parent = prev_level[i // 2]
+
+                edge = Line(
+                    parent.get_bottom(),
+                    node.get_top(),
+                    stroke_width=3,
+                    color=WHITE
+                )
+                edges.add(edge)
+
+        # make dead nodes disappear
+        for lid, level_status in enumerate(status):
+            for idx, alive in enumerate(level_status):
+                if not alive:
+                    nodes[lid][idx].set_opacity(0)
+                
+        self.play(Write(nodes), Write(edges))
         self.wait(1)
 
