@@ -105,7 +105,32 @@ def focus_parent_group(parent=0):
         grp.add(TREENODES[right].focus(color=RED))
 
     return grp
-    
+
+
+def swap_nodes(scene, fromx, toy):
+    if fromx == toy:
+        return
+
+    arcup = ArcBetweenPoints(
+        TREENODES[fromx].get_cell().get_center(),
+        TREENODES[toy].get_cell().get_center(),
+        angle=-PI,
+    )
+    arcdwn = ArcBetweenPoints(
+        TREENODES[toy].get_cell().get_center(),
+        TREENODES[fromx].get_cell().get_center(),
+        angle=-PI,
+    )
+    scene.play(
+        MoveAlongPath(TREENODES[fromx].get_value(), arcup),
+        MoveAlongPath(TREENODES[toy].get_value(), arcdwn),
+    )
+
+    TREEDATA[fromx]["data"], TREEDATA[toy]["data"] = (
+        TREEDATA[toy]["data"],
+        TREEDATA[fromx]["data"],
+    )
+
 
 class Test(Scene):
     def construct(self):
@@ -143,4 +168,5 @@ class Test(Scene):
         self.play(Write(grp))
         self.wait(1)
 
-
+        swap_nodes(self, 2, 5)
+        self.wait(1)
