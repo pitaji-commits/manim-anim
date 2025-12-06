@@ -92,14 +92,19 @@ def focus_parent_group(parent=0):
     if parent >= len(TREENODES):
         return VGroup()
 
-    if parent > 14:
-        return VGroup(TREENODES[parent].focus())
+    grp = VGroup()
+    grp.add(TREENODES[parent].focus())
 
-    return VGroup(
-        TREENODES[parent].focus(),
-        TREENODES[2*parent+1].focus(color=BLUE),
-        TREENODES[2*parent+2].focus(color=RED)
-    )
+    left = 2 * parent + 1
+    right = 2 * parent + 2
+
+    if left < len(TREENODES) and TREEDATA[left]["alive"]:
+        grp.add(TREENODES[left].focus(color=BLUE))
+
+    if right < len(TREENODES) and TREEDATA[right]["alive"]:
+        grp.add(TREENODES[right].focus(color=RED))
+
+    return grp
     
 
 class Test(Scene):
@@ -130,4 +135,12 @@ class Test(Scene):
         grp = focus_parent_group(1)
         self.play(Write(grp))
         self.wait(1)
+
+        self.play(FadeOut(grp))
+        self.wait(1)
+
+        grp = focus_parent_group(2)
+        self.play(Write(grp))
+        self.wait(1)
+
 
