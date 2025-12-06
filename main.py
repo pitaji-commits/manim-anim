@@ -85,7 +85,7 @@ def make_tree(scene, data=None, at=None):
         TREEDATA[idx]["alive"] = True
         TREENODES[idx].set_value(val)
 
-        if idx > 0 and not TREEDATA[(idx-1)//2]["alive"]:
+        if idx > 0 and not TREEDATA[(idx - 1) // 2]["alive"]:
             TREEDATA[idx]["alive"] = False
 
     draw_tree(scene)
@@ -137,41 +137,88 @@ def swap_nodes(scene, fromx, toy):
     TREENODES[toy].set_value(TREEDATA[toy]["data"])
 
 
-class Test(Scene):
-    def construct(self):
-        rad = 0.25
+class Tree:
+    def __init__(self, scene, data=None, at=None):
+        self.treedata = TREEDATA
+        self.scene = scene
+        self.rad = 0.25
+        
+        self.nodes = self._build_nodes()
+        self.edges = self._build_edges()
 
-        TREENODES.add(
+        self._make_tree(data, at)
+
+    def _build_nodes(self):
+        return VGroup(
             *[
-                MyNode(value=data["data"], is_rect=False, radius=rad).move_to(
+                MyNode(value=data["data"], is_rect=False, radius=self.rad).move_to(
                     data["position"]
                 )
-                for data in TREEDATA
+                for data in self.treedata
             ]
         )
 
-        for i, node in enumerate(TREENODES[1:], start=1):
-            parent_index = (i - 1) // 2
-            parent = TREENODES[parent_index]
-
+    def _build_edges(self):
+        edges = VGroup()
+        for i, node in enumerate(self.nodes[1:], start=1):
+            parent = self.nodes[(i - 1) // 2]
             edge = Line(
                 parent.get_bottom(), node.get_top(), stroke_width=3, color=WHITE
             )
-            TREEEDGES.add(edge)
+            edges.add(edge)
+        return edges
 
-        make_tree(self, data=[10, 3, 2, 4, 5, 1])
-        self.wait(1)
+    def _make_tree(self, data=None, at=None):
+        data = list(range(0, len(self.nodes))) if data is None else data
+        at = list(range(len(data))) if at is None else at
 
-        grp = focus_parent_group(1)
-        self.play(Write(grp))
-        self.wait(1)
+        for idx, val in zip(at, data):
+            self.treedata[idx]["data"] = val
+            self.treedata[idx]["alive"] = True
+            self.nodes[idx].set_value(val)
+            
+            if idx > 0 and not self.treedata[(idx - 1) // 2]["alive"]:
+                self.treedata[idx]["alive"] = False
 
-        self.play(FadeOut(grp))
-        self.wait(1)
+    def draw(self):
+        if not self.treedata[0]["alive"]:
+            return
 
-        grp = focus_parent_group(2)
-        self.play(Write(grp))
-        self.wait(1)
+        self.scene.play(Write(self.nodes[0]), run_time=0.5)
 
-        swap_nodes(self, 2, 5)
-        self.wait(1)
+        for idx, data in enumerate(self.treedata[1:]):
+            if data["alive"]:
+                self.scene.play(Write(self.nodes[idx + 1]), Write(self.edges[idx]), run_time=0.5)
+
+
+
+
+class Test(Scene):
+    def construct(self):
+        # rad = 0.25
+
+        # TREENODES.add(
+        #     *[
+        #         MyNode(value=data["data"], is_rect=False, radius=rad).move_to(
+        #             data["position"]
+        #         )
+        #         for data in TREEDATA
+        #     ]
+        # )
+
+        # for i, node in enumerate(TREENODES[1:], start=1):
+        #     parent_index = (i - 1) // 2
+        #     parent = TREENODES[parent_index]
+
+        #     edge = Line(
+        #         parent.get_bottom(), node.get_top(), stroke_width=3, color=WHITE
+        #     )
+        #     TREEEDGES.add(edge)
+
+        # make_tree(self, data=[10, 3, 2, 4, 5, 1])
+        # self.wait(1)
+
+        root = Tree(self, [10, 20, 30, 40, 50, 60])
+        root.draw()
+
+        
