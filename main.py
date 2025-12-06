@@ -63,7 +63,30 @@ def get_tree_level(level=0):
         tree_level.add(VGroup(TREENODES[7:15]), VGroup(TREEEDGES[6:14]))
     else:
         tree_level.add(VGroup(TREENODES[15:]), VGroup(TREEEDGES[14:]))
-            
+
+
+def draw_tree(scene):
+    if not TREEDATA[0]["alive"]:
+        return
+
+    scene.play(Write(TREENODES[0]))
+    
+    for idx, data in enumerate(TREEDATA[1:]):
+        if data["alive"]:
+            scene.play(Write(TREENODES[idx+1]), Write(TREEEDGES[idx]), run_time=0.5)
+
+
+def make_tree(scene, data=None, at=None):
+    data = list(range(0,len(TREEDATA))) if data is None else data
+    at   = list(range(len(data))) if at is None else at
+    
+    for idx, val in zip(at, data):
+        TREEDATA[idx]["data"] = val
+        TREEDATA[idx]["alive"] = True
+
+    draw_tree(scene)
+
+    
 
 class Test(Scene):
     def construct(self):
@@ -91,5 +114,5 @@ class Test(Scene):
             TREEEDGES.add(edge)
 
 
-        self.play(Write(TREENODES), Write(TREEEDGES))
+        make_tree(self, data=[10,20,30,40], at=[0,1,2,3])
         self.wait(1)
