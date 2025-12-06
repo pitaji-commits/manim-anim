@@ -69,7 +69,7 @@ def draw_tree(scene):
     if not TREEDATA[0]["alive"]:
         return
 
-    scene.play(Write(TREENODES[0]))
+    scene.play(Write(TREENODES[0]), run_time=0.5)
     
     for idx, data in enumerate(TREEDATA[1:]):
         if data["alive"]:
@@ -83,6 +83,7 @@ def make_tree(scene, data=None, at=None):
     for idx, val in zip(at, data):
         TREEDATA[idx]["data"] = val
         TREEDATA[idx]["alive"] = True
+        TREENODES[idx].set_value(val)
 
     draw_tree(scene)
 
@@ -114,5 +115,5 @@ class Test(Scene):
             TREEEDGES.add(edge)
 
 
-        make_tree(self, data=[10,20,30,40], at=[0,1,2,3])
+        make_tree(self, data=[10,3,2,4,5,1])
         self.wait(1)
