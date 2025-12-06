@@ -28,17 +28,19 @@ def _make_node(value=" ", label=" ", label_pos=UP, is_rect=True):
         
         
 def make_array(data=None, dir_right=True, index=True, index_pos=UP):
-    data = 
-    return VGroup(*[
-        _make_node(value=d, label=(i if index else " "), label_pos=index_pos)
-        for i, d in enumerate(data)
-    ])
-    
-
-
+    pass
 
 
 class Test(Scene):
     def construct(self):
-        nodes = Array(data=[], index=True, index_pos=UP, position=None)
-        arr = make_array(1,2,3,4,5)
+        r = Rectangle(width=WIDTH, height=HEIGHT)
+        t = Text(str(10)).move_to(r.get_center())
+        g = VGroup(r, t)
+        self.play(Write(g))
+        self.wait(1)
+
+        r.stretch_to_fit_width(4)
+        self.wait(1)
+
+        self.play(g.animate.to_edge(UP))
+        self.wait(1)
