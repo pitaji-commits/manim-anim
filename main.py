@@ -45,13 +45,29 @@ TREEDATA = [
     {"data": 31, "alive": False, "position": [5.625, -2.0, 0.0]},
 ]
 
+TREENODES = VGroup()
+TREEEDGES = VGroup()
+
+
+def get_tree_level(level=0):
+    level = min(level, 4)
+
+    tree_level = VGroup()
+    if level == 0:
+        tree_level.add(VGroup(TREENODES[0]))
+    elif level == 1:
+        tree_level.add(VGroup(TREENODES[1:3]), VGroup(TREEEDGES[:2]))
+    elif level == 2:
+        tree_level.add(VGroup(TREENODES[3:7]), VGroup(TREEEDGES[2:6]))
+    elif level == 3:
+        tree_level.add(VGroup(TREENODES[7:15]), VGroup(TREEEDGES[6:14]))
+    else:
+        tree_level.add(VGroup(TREENODES[15:]), VGroup(TREEEDGES[14:]))
+            
 
 class Test(Scene):
     def construct(self):
         rad = 0.25
-
-        TREENODES = VGroup()
-        TREEEDGES = VGroup()
 
         TREENODES.add(
             *[
