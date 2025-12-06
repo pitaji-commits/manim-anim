@@ -85,6 +85,9 @@ def make_tree(scene, data=None, at=None):
         TREEDATA[idx]["alive"] = True
         TREENODES[idx].set_value(val)
 
+        if idx > 0 and not TREEDATA[(idx-1)//2]["alive"]:
+            TREEDATA[idx]["alive"] = False
+
     draw_tree(scene)
 
 
