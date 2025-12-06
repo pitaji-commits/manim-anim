@@ -89,61 +89,12 @@ TREEDATA = [
 
 class Test(Scene):
     def construct(self):
-        levels = [
-            [0],
-            [1, 2],
-            [3, 4, 5, 6],
-            [7, 8, 9, 10, 11, 12, 13, 14],
-            [15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30],
-        ]
-
-        status = [
-            [True] * 2**0,
-            [True] * 2**1,
-            [True] * 2**2,
-            [True] * 2**3,
-            [True] * 2**4,
-        ]
-
         rad = 0.25
 
-        # nodes = VGroup()
-        # edges = VGroup()
+        TREENODES = VGroup()
+        TREEEDGES = VGroup()
 
-        # for lid, level in enumerate(levels):
-        #     node_level = VGroup()
-        #     for id, val in enumerate(level):
-        #         node = MyNode(value=val, is_rect=False, radius=rad).move_to(
-        #             POSITIONS[lid][id]
-        #         )
-        #         node_level.add(node)
-        #     nodes.add(node_level)
-
-        # for idx in range(1, len(levels)):
-        #     cur_level  = nodes[idx]
-        #     prev_level = nodes[idx-1]
-
-        #     for i, node in enumerate(cur_level):
-        #         parent = prev_level[i // 2]
-
-        #         edge = Line(
-        #             parent.get_bottom(),
-        #             node.get_top(),
-        #             stroke_width=3,
-        #             color=WHITE
-        #         )
-        #         edges.add(edge)
-
-        # # make dead nodes disappear
-        # for lid, level_status in enumerate(status):
-        #     for idx, alive in enumerate(level_status):
-        #         if not alive:
-        #             nodes[lid][idx].set_opacity(0)
-
-        # self.play(Write(nodes), Write(edges))
-        # self.wait(1)
-
-        TREENODES = VGroup(
+        TREENODES.add(
             *[
                 MyNode(value=data["data"], is_rect=False, radius=rad).move_to(
                     data["position"]
@@ -152,7 +103,6 @@ class Test(Scene):
             ]
         )
 
-        TREEEDGES = VGroup()
         for i, node in enumerate(TREENODES[1:], start=1):
             parent_index = (i - 1) // 2
             parent = TREENODES[parent_index]
@@ -164,7 +114,6 @@ class Test(Scene):
                 color=WHITE
             )
             TREEEDGES.add(edge)
-
 
 
         self.play(Write(TREENODES), Write(TREEEDGES))
