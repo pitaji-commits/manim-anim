@@ -138,13 +138,16 @@ def swap_nodes(scene, fromx, toy):
 
 
 class Tree:
-    def __init__(self, scene, data=None, at=None):
+    def __init__(self, scene, data=None, at=None, scale=0.8):
         self.treedata = TREEDATA
         self.scene = scene
         self.rad = 0.25
-        
+        self.scale=scale
+
         self.nodes = self._build_nodes()
         self.edges = self._build_edges()
+
+        VGroup(self.nodes, self.edges).scale(scale)
 
         self._make_tree(data, at)
 
@@ -176,10 +179,13 @@ class Tree:
             self.treedata[idx]["data"] = val
             self.treedata[idx]["alive"] = True
             self.nodes[idx].set_value(val)
-            
+
             if idx > 0 and not self.treedata[(idx - 1) // 2]["alive"]:
                 self.treedata[idx]["alive"] = False
 
+    def treegrp(self):
+        return VGroup(self.nodes, self.edges)
+    
     def draw(self):
         if not self.treedata[0]["alive"]:
             return
@@ -188,9 +194,9 @@ class Tree:
 
         for idx, data in enumerate(self.treedata[1:]):
             if data["alive"]:
-                self.scene.play(Write(self.nodes[idx + 1]), Write(self.edges[idx]), run_time=0.5)
-
-
+                self.scene.play(
+                    Write(self.nodes[idx + 1]), Write(self.edges[idx]), run_time=0.5
+                )
 
 
 class Test(Scene):
@@ -218,7 +224,10 @@ class Test(Scene):
         # make_tree(self, data=[10, 3, 2, 4, 5, 1])
         # self.wait(1)
 
-        root = Tree(self, [10, 20, 30, 40, 50, 60])
+        root = Tree(self)
         root.draw()
 
-        
+        self.wait(1)
+
+        self.play(root.treegrp().animate.to_edge(LEFT))
+        self.wait(1)
