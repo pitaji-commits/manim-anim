@@ -107,8 +107,8 @@ class Test(Scene):
 
         rad = 0.25
 
-        nodes = VGroup()
-        edges = VGroup()
+        # nodes = VGroup()
+        # edges = VGroup()
 
         # for lid, level in enumerate(levels):
         #     node_level = VGroup()
@@ -140,8 +140,8 @@ class Test(Scene):
         #         if not alive:
         #             nodes[lid][idx].set_opacity(0)
 
-        self.play(Write(nodes), Write(edges))
-        self.wait(1)
+        # self.play(Write(nodes), Write(edges))
+        # self.wait(1)
 
         TREENODES = VGroup(
             *[
@@ -152,5 +152,20 @@ class Test(Scene):
             ]
         )
 
-        self.play(Write(TREENODES))
+        TREEEDGES = VGroup()
+        for i, node in enumerate(TREENODES[1:], start=1):
+            parent_index = (i - 1) // 2
+            parent = TREENODES[parent_index]
+            
+            edge = Line(
+                parent.get_bottom(),
+                node.get_top(),
+                stroke_width=3,
+                color=WHITE
+            )
+            TREEEDGES.add(edge)
+
+
+
+        self.play(Write(TREENODES), Write(TREEEDGES))
         self.wait(1)
