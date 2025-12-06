@@ -130,6 +130,8 @@ def swap_nodes(scene, fromx, toy):
         TREEDATA[toy]["data"],
         TREEDATA[fromx]["data"],
     )
+    TREENODES[fromx].set_value(TREEDATA[fromx]["data"])
+    TREENODES[toy].set_value(TREEDATA[toy]["data"])
 
 
 class Test(Scene):
