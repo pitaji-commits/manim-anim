@@ -70,6 +70,9 @@ class MyNode(VGroup):
             self.label = new_label
             self[2].become(new_label)
 
+    def focus(self, color=GREEN, buff=1):
+        return Circle().set_fill(color, opacity=0.3).set_stroke(color, width=2).surround(self[0], buffer_factor=0.8*buff)
+
 
 
 class MyVector(VGroup):
