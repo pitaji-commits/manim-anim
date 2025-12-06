@@ -185,7 +185,26 @@ class Tree:
 
     def treegrp(self):
         return VGroup(self.nodes, self.edges)
-    
+
+    def focus(self, node=0):
+        if node >= len(self.nodes):
+            return VGroup()
+
+        grp = VGroup()
+        grp.add(self.nodes[node].focus())
+
+        left = 2 * node + 1
+        right = 2 * node + 2
+
+        if left < len(self.nodes) and self.treedata[left]["alive"]:
+            grp.add(self.nodes[left].focus(color=BLUE))
+
+        if right < len(self.nodes) and self.treedata[right]["alive"]:
+            grp.add(self.nodes[right].focus(color=RED))
+
+        return grp
+
+
     def draw(self):
         if not self.treedata[0]["alive"]:
             return
@@ -197,6 +216,33 @@ class Tree:
                 self.scene.play(
                     Write(self.nodes[idx + 1]), Write(self.edges[idx]), run_time=0.5
                 )
+
+    def swap_nodes(self, fromx, toy):
+        if fromx == toy:
+            return
+
+        arcup = ArcBetweenPoints(
+            self.nodes[fromx].get_cell().get_center(),
+            self.nodes[toy].get_cell().get_center(),
+            angle=-PI,
+        )
+        arcdwn = ArcBetweenPoints(
+            self.nodes[toy].get_cell().get_center(),
+            self.nodes[fromx].get_cell().get_center(),
+            angle=-PI,
+        )
+        self.scene.play(
+            MoveAlongPath(self.nodes[fromx].get_value(), arcup),
+            MoveAlongPath(self.nodes[toy].get_value(), arcdwn),
+        )
+        
+        self.treedata[fromx]["data"], self.treedata[toy]["data"] = (
+            self.treedata[toy]["data"],
+            self.treedata[fromx]["data"],
+        )
+        self.treedata[fromx].set_value(self.treedata[fromx]["data"])
+        self.treedata[toy].set_value(self.treedata[toy]["data"])
+
 
 
 class Test(Scene):
