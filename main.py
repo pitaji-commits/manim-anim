@@ -70,16 +70,16 @@ def draw_tree(scene):
         return
 
     scene.play(Write(TREENODES[0]), run_time=0.5)
-    
+
     for idx, data in enumerate(TREEDATA[1:]):
         if data["alive"]:
-            scene.play(Write(TREENODES[idx+1]), Write(TREEEDGES[idx]), run_time=0.5)
+            scene.play(Write(TREENODES[idx + 1]), Write(TREEEDGES[idx]), run_time=0.5)
 
 
 def make_tree(scene, data=None, at=None):
-    data = list(range(0,len(TREEDATA))) if data is None else data
-    at   = list(range(len(data))) if at is None else at
-    
+    data = list(range(0, len(TREEDATA))) if data is None else data
+    at = list(range(len(data))) if at is None else at
+
     for idx, val in zip(at, data):
         TREEDATA[idx]["data"] = val
         TREEDATA[idx]["alive"] = True
@@ -87,6 +87,19 @@ def make_tree(scene, data=None, at=None):
 
     draw_tree(scene)
 
+
+def focus_parent_group(parent=0):
+    if parent >= len(TREENODES):
+        return VGroup()
+
+    if parent > 14:
+        return VGroup(TREENODES[parent].focus())
+
+    return VGroup(
+        TREENODES[parent].focus(),
+        TREENODES[2*parent+1].focus(color=BLUE),
+        TREENODES[2*parent+2].focus(color=RED)
+    )
     
 
 class Test(Scene):
@@ -105,15 +118,16 @@ class Test(Scene):
         for i, node in enumerate(TREENODES[1:], start=1):
             parent_index = (i - 1) // 2
             parent = TREENODES[parent_index]
-            
+
             edge = Line(
-                parent.get_bottom(),
-                node.get_top(),
-                stroke_width=3,
-                color=WHITE
+                parent.get_bottom(), node.get_top(), stroke_width=3, color=WHITE
             )
             TREEEDGES.add(edge)
 
-
-        make_tree(self, data=[10,3,2,4,5,1])
+        make_tree(self, data=[10, 3, 2, 4, 5, 1])
         self.wait(1)
+
+        grp = focus_parent_group(1)
+        self.play(Write(grp))
+        self.wait(1)
+
